@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DarshanPass – Smart Mandir Registration Platform (Prototype)</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#faf7f2;--card:#fff;--tx:#1f1a17;--mu:#6b625b;--bd:#e6ded3;--ok:#15803d;--wn:#b45309;--er:#b91c1c;--okb:#dcfce7;--wnb:#fef3c7;--erb:#fee2e2;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17130f;--card:#221c17;--tx:#f5efe8;--mu:#a69b90;--bd:#3a3028;--ok:#4ade80;--wn:#fbbf24;--er:#f87171;--okb:#12301d;--wnb:#3a2c0b;--erb:#3d1515;color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;margin:0 0 .4em;line-height:1.2}h1{font-size:2rem}h2{font-size:1.35rem}h3{font-size:1.05rem}
+.wrap{max-width:1080px;margin:0 auto;padding:16px}
+.top{background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+.top .wrap{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 16px}
+.logo{font-family:Georgia,serif;font-weight:700;font-size:1.15rem;color:var(--ac)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.tabs button,.btn{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:7px 12px;cursor:pointer}
+.tabs button.on,.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+select,input{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:8px 10px;width:100%}
+.top select{width:auto}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.hero{background:var(--ac);color:#fff;border-radius:16px;padding:28px 22px;margin-bottom:14px}
+.hero p{max-width:600px;opacity:.95}.hero .btn{margin-top:6px;background:#fff;color:#1f1a17;border:0;font-weight:600}
+.k{font-size:1.7rem;font-weight:700;font-family:Georgia,serif}.mu{color:var(--mu);font-size:.88rem}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:.78rem;font-weight:600}
+.ok{background:var(--okb);color:var(--ok)}.wn{background:var(--wnb);color:var(--wn)}.er{background:var(--erb);color:var(--er)}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.day{min-width:78px;text-align:center;border:2px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;padding:8px 4px;cursor:pointer;font:inherit}
+.day.sel{border-color:var(--ac)}.day small{display:block;font-size:.72rem}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px}
+.slots{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));margin-top:10px}
+.slot{border:2px solid var(--bd);border-radius:10px;padding:10px;background:var(--card);color:var(--tx);font:inherit;cursor:pointer;text-align:left}
+.slot.sel{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,var(--card))}.slot:disabled{opacity:.5;cursor:not-allowed}
+.steps{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}.steps span{font-size:.8rem;padding:4px 10px;border-radius:99px;background:var(--bd);color:var(--mu)}.steps .on{background:var(--ac);color:#fff}
+.f{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}label{font-size:.85rem;color:var(--mu);display:block;margin-bottom:3px}
+.msg{padding:10px 12px;border-radius:8px;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:.9rem}td,th{text-align:left;padding:7px 6px;border-bottom:1px solid var(--bd)}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
+.pass{max-width:360px;margin:0 auto;border:2px dashed var(--ac);border-radius:16px;padding:18px;text-align:center;background:var(--card)}
+svg{max-width:100%;height:auto}.chart text{fill:var(--mu);font-size:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.foot{text-align:center;color:var(--mu);font-size:.8rem;padding:20px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+const {useState}=React, html=htm.bind(React.createElement);
+const BASE=new Date(2026,9,24);
+const dayDate=i=>{const d=new Date(BASE);d.setDate(d.getDate()+i);return d};
+const fd=(d,o)=>d.toLocaleDateString('en-IN',o||{weekday:'short',day:'numeric',month:'short'});
+const rnd=s=>{const x=Math.sin(s*9301+49297)*233280;return x-Math.floor(x)};
+const seed=t=>[...t.id].reduce((a,c)=>a+c.charCodeAt(0),0);
+const n0=x=>Math.round(x).toLocaleString('en-IN');
+const slotSet=['06:00–08:00','08:00–10:00','10:00–12:00','12:00–14:00','14:00–16:00','16:00–18:00'];
+const TEMPLES0=[
+ {id:'kainchi',code:'KD',name:'Kainchi Dham',loc:'Nainital, Uttarakhand',ac:'#c2410c',cap:20000,max:25000,res:10,slots:slotSet,weather:'Clear',festival:false,live:true,
+  fest:'Foundation Day · 15 June',park:['Bhowali Shuttle Point','Gagar Bus Bay','Kainchi Lot P2','Two-wheeler Yard'],note:'Private vehicles stop at Bhowali; shuttles run to the temple. Bhowali–Almora highway is kept clear for through and emergency traffic.'},
+ {id:'jageshwar',code:'JD',name:'Jageshwar Dham',loc:'Almora, Uttarakhand',ac:'#0f766e',cap:6000,max:8000,res:10,slots:slotSet.slice(0,5),weather:'Clear',festival:false,live:false,
+  fest:'Maha Shivratri',park:['Dandeshwar Lot','Bus Bay','Jageshwar Lot A','Two-wheeler Yard'],note:'Ancient temple cluster; registration limits protect the forest approach road.'},
+ {id:'golu',code:'GG',name:'Golu Devta Mandir',loc:'Chitai, Almora',ac:'#6d28d9',cap:4000,max:5500,res:15,slots:slotSet.slice(0,4),weather:'Clear',festival:false,live:false,
+  fest:'Navratri',park:['Chitai Lot','Bus Bay','Roadside Bay B','Two-wheeler Yard'],note:'Higher reserved quota for local residents and seniors.'}];
+const effCap=t=>t.festival?t.max:Math.round(t.cap*(t.weather==='Red'?.6:t.weather==='Amber'?.85:1));
+function model(t,ex){
+ const n=t.slots.length,eff=effCap(t),w=t.slots.map((_,j)=>Math.exp(-Math.pow(j-(n-1)/2.2,2)/(n/1.6)));
+ const sw=w.reduce((a,b)=>a+b,0),sc=Math.floor(eff*(1-t.res/100)/n),rc=Math.floor(eff*t.res/100/n);
+ return [...Array(14)].map((_,i)=>{
+  const d=dayDate(i),wk=[0,6].includes(d.getDay()),fc=Math.round(t.cap*((wk?1.1:.6)+.25*rnd(seed(t)+i))),reg=fc*Math.max(.3,1-i*.045);
+  const slots=t.slots.map((s,j)=>{
+   const b=Math.min(sc,Math.round(reg*w[j]/sw)+(ex[t.id+'|'+i+'|'+j+'|g']||0));
+   const rb=Math.min(rc,Math.round(rc*.3)+(ex[t.id+'|'+i+'|'+j+'|r']||0));
+   return{s,b,left:sc-b,cap:sc,rleft:rc-rb,rcap:rc}});
+  const left=slots.reduce((a,x)=>a+x.left,0),tot=sc*n,registered=slots.reduce((a,x)=>a+x.b+x.rcap-x.rleft,0);
+  const status=left<=0?'full':left/tot<.2?'amber':'open';
+  return{i,d,wk,fc,slots,left,registered,status,eff}})}
+const SC={open:['ok','Open'],amber:['wn','Filling'],full:['er','Full']},dotc={open:'var(--ok)',amber:'var(--wn)',full:'var(--er)'};
+function QR({v}){let h=0;for(const c of v)h=(h*31+c.charCodeAt(0))>>>0;const N=25,cells=[];
+ const fin=(x,y)=>[[0,0],[N-7,0],[0,N-7]].some(([a,b])=>x>=a&&x<a+7&&y>=b&&y<b+7);
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++){let on;if(fin(x,y)){const[a,b]=[[0,0],[N-7,0],[0,N-7]].find(([a,b])=>x>=a&&x<a+7&&y>=b&&y<b+7);const dx=x-a,dy=y-b;on=dx%6==0||dy%6==0||(dx>1&&dx<5&&dy>1&&dy<5)}else{h=(h*1103515245+12345)>>>0;on=(h>>16)&1}
+  if(on)cells.push(html`<rect key=${x+'-'+y} x=${x} y=${y} width="1" height="1"/>`)}
+ return html`<svg viewBox="-1 -1 27 27" width="190" style=${{background:'#fff',borderRadius:8,padding:4}} fill="#111" shapeRendering="crispEdges">${cells}</svg>`}
+const Pill=({s})=>html`<span class=${'pill '+SC[s][0]}>${SC[s][1]}</span>`;
+
+function Home({t,D,go}){const td=D[0];return html`<div>
+ <div class="hero"><div class="mu" style=${{color:'#fff',opacity:.85}}>${t.loc}</div><h1>${t.name} · Smart Darshan Registration</h1>
+  <p>Book a date and slot before you travel, get a QR pass with your parking lot and shuttle point, and enjoy a calmer darshan. If a date is full, you’ll be offered the next free date — never turned back on arrival.</p>
+  <button class="btn" onClick=${()=>go('book')}>Register for darshan →</button></div>
+ <div class="grid">
+  <div class="card"><div class="mu">Today’s registrations</div><div class="k">${n0(td.registered)} / ${n0(td.eff)}</div><div class="bar"><i style=${{width:Math.min(100,td.registered/td.eff*100)+'%'}}></i></div>
+   <div class="mu" style=${{marginTop:6}}>Daily cap ${t.festival?'· Festival mode':t.weather!=='Clear'?'· lowered for '+t.weather+' weather alert':''}</div></div>
+  <div class="card"><div class="mu">Next free date</div><div class="k">${fd((D.find(x=>x.status!=='full')||D[13]).d)}</div><div class="mu">Availability is live and updates as people register.</div></div>
+  <div class="card"><div class="mu">Weather, next 24 h</div><div class="k">${t.weather}</div><div class="mu">Amber/Red alerts lower the cap automatically.</div></div></div>
+ <div class="card"><h2>Your visit in five steps</h2><div class="grid">${[['1 · Choose a date','Live availability by slot, on web or WhatsApp.'],['2 · Register','Mobile OTP, group size, vehicle and stay.'],['3 · Get a QR pass','Slot, parking lot and shuttle point on one pass.'],['4 · Check in','Scanned at the entry checkpoint — works offline too.'],['5 · Darshan','Staggered entry, short queues, safe seating.']].map(([a,b])=>html`<div key=${a}><h3>${a}</h3><div class="mu">${b}</div></div>`)}</div></div>
+ <div class="grid"><div class="card"><h3>Fair access</h3><div class="mu">About ${t.res}% of each slot is held for local residents, seniors and emergencies. No-show passes are released to the waitlist a few hours before the slot.</div></div>
+  <div class="card"><h3>Your data, protected</h3><div class="mu">Only name, mobile, group size, vehicle and date. No biometrics. Used for crowd safety and deleted after a fixed period. Aligned with the DPDP Act, 2023.</div></div>
+  <div class="card"><h3>Need help?</h3><div class="mu">No smartphone? Use assisted counters or call the helpline. ${t.note}</div></div></div>
+ ${t.fest&&html`<div class="card"><b>${t.fest}</b><span class="mu"> — runs a separate shuttle-only festival plan.</span></div>`}</div>`}
+
+function Book({t,D,passes,addPass,wait,addWait,go}){
+ const[step,setStep]=useState(1),[di,setDi]=useState(0),[sj,setSj]=useState(null),[wl,setWl]=useState(false),[otp,setOtp]=useState(''),[res,setRes]=useState(null),[err,setErr]=useState('');
+ const[f,setF]=useState({name:'',mobile:'',size:2,cat:'General',veh:'Car',stay:'None',consent:false});
+ const day=D[di],set=(k,v)=>setF({...f,[k]:v}),reserved=f.cat!=='General';
+ const nextFree=D.find(x=>x.i>di&&x.status!=='full');
+ const left=sj==null?0:reserved?day.slots[sj].rleft:day.slots[sj].left;
+ const next=()=>{setErr('');
+  if(f.name.trim().length<2)return setErr('Please enter the lead visitor’s name.');
+  if(!/^[6-9]\d{9}$/.test(f.mobile))return setErr('Enter a valid 10-digit Indian mobile number.');
+  if(f.size<1||f.size>10)return setErr('Group size must be between 1 and 10.');
+  if(!f.consent)return setErr('Please accept the consent to continue.');
+  if(passes.some(p=>p.t===t.id&&p.di===di&&p.mobile===f.mobile))return setErr('A pass already exists for this mobile number on this date (one pass per person per date).');
+  if(!wl&&f.size>left)return setErr('Only '+left+' place(s) left in this slot. Reduce the group size or pick another slot.');
+  setStep(3)};
+ const verify=()=>{if(otp!=='123456')return setErr('Incorrect OTP. (Demo OTP is 123456)');setErr('');
+  if(wl){const pos=wait.filter(w=>w.t===t.id).length+1;addWait({t:t.id,di,name:f.name});setRes({wait:pos})}
+  else{const ref=t.code+'-'+fd(day.d,{day:'2-digit',month:'2-digit'}).replace(/\W/g,'')+'-'+(1000+passes.length*37+rnd(passes.length)*900|0);
+   const vi=f.veh==='Bus'?1:f.veh==='Taxi'?0:f.veh==='Two-wheeler'?3:f.veh==='Car'?0:0;
+   const p={ref,t:t.id,di,sj,name:f.name,mobile:f.mobile,size:+f.size,veh:f.veh,cat:f.cat,status:'issued',lot:t.park[f.veh==='Bus'?1:f.veh==='Two-wheeler'?3:0]};
+   addPass(p,t.id+'|'+di+'|'+sj+'|'+(reserved?'r':'g'),+f.size);setRes(p)}
+  setStep(4)};
+ const S=['Date & slot','Details','Verify OTP','Your pass'];
+ return html`<div><div class="steps">${S.map((s,i)=>html`<span key=${s} class=${step===i+1?'on':''}>${i+1}. ${s}</span>`)}</div>
+ ${step===1&&html`<div class="card"><h2>Choose your date</h2><div class="days">${D.map(x=>html`<button key=${x.i} class=${'day'+(x.i===di?' sel':'')} onClick=${()=>{setDi(x.i);setSj(null);setWl(false)}}>
+   <small>${fd(x.d,{weekday:'short'})}</small><b>${fd(x.d,{day:'numeric',month:'short'})}</b><small><span class="dot" style=${{background:dotc[x.status]}}></span>${SC[x.status][1]}</small></button>`)}</div>
+  ${day.status==='full'?html`<div class="msg er"><b>${fd(day.d)} is fully booked.</b> You’re not turned back on arrival — choose another date now${nextFree?'':' or join the waitlist'}.
+    <div class="row" style=${{marginTop:8}}>${nextFree&&html`<button class="btn pri" onClick=${()=>setDi(nextFree.i)}>Switch to ${fd(nextFree.d)}</button>`}<button class="btn" onClick=${()=>{setWl(true);setStep(2)}}>Join waitlist</button></div></div>`
+  :html`<h3 style=${{marginTop:14}}>Pick an arrival slot</h3><div class="slots">${day.slots.map((s,j)=>html`<button key=${j} disabled=${s.left<1&&s.rleft<1} class=${'slot'+(sj===j?' sel':'')} onClick=${()=>setSj(j)}><b>${s.s}</b><div class="mu">${s.left>0?s.left+' places left':'General full'}</div><div class="mu">Reserved: ${s.rleft}</div></button>`)}</div>
+   <div class="row" style=${{marginTop:12}}><button class="btn pri" disabled=${sj==null} onClick=${()=>setStep(2)}>Continue</button></div>`}</div>`}
+ ${step===2&&html`<div class="card"><h2>${wl?'Join waitlist for '+fd(day.d):fd(day.d)+' · '+day.slots[sj].s}</h2>
+  <div class="f"><div><label>Lead visitor name</label><input value=${f.name} onInput=${e=>set('name',e.target.value)}/></div>
+  <div><label>Mobile number</label><input inputMode="numeric" maxLength="10" value=${f.mobile} onInput=${e=>set('mobile',e.target.value.replace(/\D/g,''))}/></div>
+  <div><label>Group size</label><input type="number" min="1" max="10" value=${f.size} onInput=${e=>set('size',e.target.value)}/></div>
+  <div><label>Category (uses reserved quota if not General)</label><select value=${f.cat} onChange=${e=>set('cat',e.target.value)}>${['General','Local resident','Senior citizen (60+)','Emergency / medical'].map(c=>html`<option key=${c}>${c}</option>`)}</select></div>
+  <div><label>Vehicle</label><select value=${f.veh} onChange=${e=>set('veh',e.target.value)}>${(t.festival?['Shuttle only']:['Car','Bus','Taxi','Two-wheeler','Shuttle only']).map(c=>html`<option key=${c}>${c}</option>`)}</select></div>
+  <div><label>Stay</label><select value=${f.stay} onChange=${e=>set('stay',e.target.value)}>${['None','Hotel','Homestay'].map(c=>html`<option key=${c}>${c}</option>`)}</select></div></div>
+  <label style=${{marginTop:12,display:'flex',gap:8}}><input type="checkbox" style=${{width:'auto'}} checked=${f.consent} onChange=${e=>set('consent',e.target.checked)}/>I consent to my data being used only for crowd safety and planning, and deleted after the retention period.</label>
+  ${err&&html`<div class="msg er">${err}</div>`}<div class="row"><button class="btn" onClick=${()=>setStep(1)}>Back</button><button class="btn pri" onClick=${next}>Send OTP</button></div></div>`}
+ ${step===3&&html`<div class="card"><h2>Verify your mobile</h2><p class="mu">OTP sent to +91 ${f.mobile} (SMS / WhatsApp). Demo OTP: <b>123456</b></p>
+  <input style=${{maxWidth:200}} inputMode="numeric" maxLength="6" value=${otp} onInput=${e=>setOtp(e.target.value.replace(/\D/g,''))}/>${err&&html`<div class="msg er">${err}</div>`}
+  <div class="row" style=${{marginTop:10}}><button class="btn" onClick=${()=>setStep(2)}>Back</button><button class="btn pri" disabled=${otp.length<6} onClick=${verify}>Verify & confirm</button></div></div>`}
+ ${step===4&&res&&(res.wait?html`<div class="card"><h2>You’re on the waitlist</h2><p>Position <b>#${res.wait}</b> for ${fd(day.d)}. We’ll message you on WhatsApp if passes are released from no-shows.</p><button class="btn pri" onClick=${()=>go('home')}>Done</button></div>`
+  :html`<div class="pass"><div class="mu">${t.name} · Darshan Pass</div><div style=${{margin:'10px 0'}}><${QR} v=${res.ref}/></div><h2>${res.ref}</h2>
+   <table><tbody><tr><td>Date</td><td>${fd(day.d)}</td></tr><tr><td>Slot</td><td>${day.slots[res.sj??sj].s}</td></tr><tr><td>Visitors</td><td>${res.size} · ${res.cat}</td></tr><tr><td>Parking / pickup</td><td>${res.lot}</td></tr><tr><td>Shuttle point</td><td>${t.park[0]}</td></tr></tbody></table>
+   <p class="mu">Signed QR · one pass per person · scans offline at checkpoints.</p><button class="btn pri" onClick=${()=>go('scan')}>Open officer scan view →</button></div>`)}</div>`}
+
+function Chart({D,t}){const W=660,H=190,m=28,bw=(W-m)/14,mx=Math.max(t.max,...D.map(x=>x.fc*1.15))*1.05,y=v=>H-24-(v/mx)*(H-40);
+ return html`<svg class="chart" viewBox=${'0 0 '+W+' '+H}>
+ ${D.map((x,i)=>html`<g key=${i}><rect x=${m+i*bw+4} y=${y(x.registered)} width=${bw-8} height=${H-24-y(x.registered)} fill=${t.ac} opacity=".85"/>
+  <line x1=${m+i*bw+bw/2} x2=${m+i*bw+bw/2} y1=${y(x.fc*1.15)} y2=${y(x.fc*.85)} stroke="var(--tx)"/><circle cx=${m+i*bw+bw/2} cy=${y(x.fc)} r="3" fill="var(--tx)"/>
+  <text x=${m+i*bw+bw/2} y=${H-10} textAnchor="middle">${fd(x.d,{day:'numeric'})}</text></g>`)}
+ <line x1=${m} x2=${W} y1=${y(D[0].eff)} y2=${y(D[0].eff)} stroke="var(--er)" strokeDasharray="4"/><text x=${m} y=${y(D[0].eff)-4}>Cap ${n0(D[0].eff)}</text></svg>`}
+
+function Ops({t,D,upd,wait,passes,rel}){const d=D[0],occ=Math.min(99,Math.round(d.registered/d.eff*72)),sw=Math.round(4+occ/100*14),over=D.filter(x=>x.fc>x.eff),tw=wait.filter(w=>w.t===t.id).length;
+ return html`<div><h2>Command view · ${t.name}</h2><div class="mu" style=${{marginBottom:10}}>Illustrative sample values · AI advises, officers decide.</div>
+ <div class="grid"><div class="card"><div class="mu">Registered today</div><div class="k">${n0(d.registered)} / ${n0(d.eff)}</div><div class="bar"><i style=${{width:Math.min(100,d.registered/d.eff*100)+'%'}}></i></div></div>
+  <div class="card"><div class="mu">Next Saturday forecast</div><div class="k">${n0(D.find(x=>x.i>0&&x.d.getDay()===6).fc)}</div><div class="mu">±15% range</div></div>
+  <div class="card"><div class="mu">Parking bays in use</div><div class="k">${occ}%</div><div class="mu">Avg shuttle wait ${sw} min</div></div>
+  <div class="card"><div class="mu">Weather · next 24 h</div><div class="k">${t.weather==='Clear'?'Clear':t.weather}</div><div class="mu">Waitlist: ${tw} · Passes issued: ${passes.filter(p=>p.t===t.id).length}</div></div></div>
+ <div class="card"><h3>14-day footfall: registered (bars) vs forecast with range, against cap</h3><${Chart} D=${D} t=${t}/></div>
+ <div class="grid"><div class="card"><h3>Today by slot</h3>${d.slots.map((s,j)=>html`<div key=${j} style=${{marginBottom:8}}><div class="row" style=${{justifyContent:'space-between'}}><span>${s.s}</span><span class="mu">${s.b}/${s.cap}</span></div><div class="bar"><i style=${{width:s.b/s.cap*100+'%',background:s.left<=0?'var(--er)':t.ac}}></i></div></div>`)}</div>
+  <div class="card"><h3>Policy controls</h3>
+   <label>Daily cap: ${n0(t.cap)} (max ${n0(t.max)})</label><input type="range" min=${Math.round(t.max*.5)} max=${t.max} step="500" value=${t.cap} onInput=${e=>upd({cap:+e.target.value})}/>
+   <label style=${{marginTop:10}}>Reserved quota: ${t.res}%</label><input type="range" min="0" max="30" value=${t.res} onInput=${e=>upd({res:+e.target.value})}/>
+   <label style=${{marginTop:10}}>Weather / road alert</label><select value=${t.weather} onChange=${e=>upd({weather:e.target.value})}>${['Clear','Amber','Red'].map(w=>html`<option key=${w}>${w}</option>`)}</select>
+   <div class="mu">Amber lowers the cap 15%, Red lowers it 40% automatically.</div>
+   <label style=${{marginTop:10,display:'flex',gap:8}}><input type="checkbox" style=${{width:'auto'}} checked=${t.festival} onChange=${e=>upd({festival:e.target.checked})}/>Festival mode (${t.fest}) — shuttle-only plan</label>
+   <button class="btn" style=${{marginTop:10}} onClick=${rel}>Release no-shows to waitlist</button></div>
+  <div class="card"><h3>Alerts & planning</h3>${over.length?over.slice(0,4).map(x=>html`<div key=${x.i} class="msg er">${fd(x.d)}: forecast ${n0(x.fc)} exceeds cap ${n0(x.eff)} — plan extra shuttles & police.</div>`):html`<div class="msg ok">No forecast days above cap.</div>`}
+   ${t.weather!=='Clear'&&html`<div class="msg wn">${t.weather} alert active — cap lowered to ${n0(effCap(t))}.</div>`}<div class="mu">Fraud checks: duplicate mobile per date is blocked at registration.</div></div></div></div>`}
+
+function Scan({t,passes,scan,mkDemo,sync,offline,setOffline}){const mine=passes.filter(p=>p.t===t.id),[out,setOut]=useState(null),q=mine.filter(p=>p.status==='queued').length;
+ const go=p=>{setOut(scan(p))};
+ return html`<div><h2>Checkpoint scanner · ${t.name}</h2><div class="card"><div class="row"><label style=${{display:'flex',gap:8,margin:0}}><input type="checkbox" style=${{width:'auto'}} checked=${offline} onChange=${e=>setOffline(e.target.checked)}/>Simulate no network (offline scanning)</label>
+  <button class="btn" disabled=${!q||offline} onClick=${sync}>Sync ${q} queued scan(s)</button><button class="btn" onClick=${mkDemo}>+ Demo pass for today</button></div>
+  ${out&&html`<div class=${'msg '+out[0]}>${out[1]}</div>`}</div>
+ <div class="card"><h3>Issued passes</h3>${mine.length?html`<table><thead><tr><th>Pass</th><th>Name</th><th>Date · slot</th><th>Group</th><th>Status</th><th></th></tr></thead><tbody>${mine.map(p=>html`<tr key=${p.ref}><td>${p.ref}</td><td>${p.name}</td><td>${fd(dayDate(p.di))} · ${t.slots[p.sj]}</td><td>${p.size}</td><td><span class=${'pill '+(p.status==='checked-in'?'ok':p.status==='queued'?'wn':'')}>${p.status}</span></td><td><button class="btn" onClick=${()=>go(p)}>Scan</button></td></tr>`)}</tbody></table>`:html`<div class="mu">No passes yet — create one in the visitor flow, or add a demo pass.</div>`}</div></div>`}
+
+function Platform({T,D0,setT,pick}){const[nf,setNf]=useState({name:'',loc:'',cap:3000,slots:4});const add=()=>{if(!nf.name.trim())return;const id='t'+T.length,cols=['#be185d','#1d4ed8','#4d7c0f','#a16207'];
+  setT([...T,{id,code:nf.name.trim().slice(0,2).toUpperCase(),name:nf.name,loc:nf.loc||'India',ac:cols[T.length%4],cap:+nf.cap,max:Math.round(nf.cap*1.25),res:10,slots:slotSet.slice(0,+nf.slots),weather:'Clear',festival:false,live:false,fest:'Annual festival',park:['Main Lot','Bus Bay','Lot B','Two-wheeler Yard'],note:'Newly onboarded in minutes using the same platform.'}]);setNf({name:'',loc:'',cap:3000,slots:4})};
+ return html`<div><h2>Platform admin · all mandirs</h2><div class="mu" style=${{marginBottom:10}}>One platform, one codebase. Each mandir gets its own cap, slots, quota, branding, officers and dashboard.</div>
+ <div class="card"><table><thead><tr><th>Mandir</th><th>Location</th><th>Daily cap</th><th>Slots</th><th>Today</th><th>Status</th><th></th></tr></thead><tbody>${T.map(t=>{const d=model(t,{})[0];return html`<tr key=${t.id}><td><b style=${{color:t.ac}}>${t.name}</b></td><td>${t.loc}</td><td>${n0(t.cap)}</td><td>${t.slots.length}</td><td>${Math.round(d.registered/d.eff*100)}%</td><td>${t.live?html`<span class="pill ok">Live pilot</span>`:html`<span class="pill wn">Demo tenant</span>`}</td><td><button class="btn" onClick=${()=>pick(t.id)}>Open</button></td></tr>`})}</tbody></table></div>
+ <div class="card"><h3>Onboard a new mandir</h3><div class="f"><div><label>Mandir name</label><input value=${nf.name} onInput=${e=>setNf({...nf,name:e.target.value})}/></div><div><label>Location</label><input value=${nf.loc} onInput=${e=>setNf({...nf,loc:e.target.value})}/></div>
+  <div><label>Daily cap</label><input type="number" value=${nf.cap} onInput=${e=>setNf({...nf,cap:e.target.value})}/></div><div><label>Slots per day</label><select value=${nf.slots} onChange=${e=>setNf({...nf,slots:e.target.value})}>${[3,4,5,6].map(n=>html`<option key=${n}>${n}</option>`)}</select></div></div>
+  <button class="btn pri" style=${{marginTop:12}} disabled=${!nf.name.trim()} onClick=${add}>Onboard mandir</button></div></div>`}
+
+function App(){
+ const[T,setT]=useState(TEMPLES0),[tid,setTid]=useState('kainchi'),[view,setView]=useState('home'),[ex,setEx]=useState({}),[offline,setOffline]=useState(false),
+ [wait,setWait]=useState([{t:'kainchi',di:0,name:'Sample'},{t:'kainchi',di:0,name:'Sample'}]),
+ [passes,setPasses]=useState([{ref:'KD-2410-4821',t:'kainchi',di:0,sj:2,name:'Rajesh Kumar',mobile:'9876500001',size:4,veh:'Car',cat:'General',status:'issued',lot:'Bhowali Shuttle Point'},{ref:'KD-2410-5176',t:'kainchi',di:0,sj:3,name:'Meena Bisht',mobile:'9876500002',size:2,veh:'Bus',cat:'Senior citizen (60+)',status:'issued',lot:'Gagar Bus Bay'}]);
+ const t=T.find(x=>x.id===tid),D=model(t,ex),upd=p=>setT(T.map(x=>x.id===tid?{...x,...p}:x));
+ const addPass=(p,k,n)=>{setPasses(a=>[...a,p]);setEx(e=>({...e,[k]:(e[k]||0)+n}))};
+ const setSt=(ref,s)=>setPasses(a=>a.map(p=>p.ref===ref?{...p,status:s}:p));
+ const scan=p=>{if(p.di!==0)return['er','Rejected: pass is for '+fd(dayDate(p.di))+', not today.'];if(p.status==='checked-in')return['er','Rejected: pass '+p.ref+' already used (duplicate).'];
+  if(offline){setSt(p.ref,'queued');return['wn','Offline: signature verified locally for '+p.name+' (group of '+p.size+'). Queued for sync.']}
+  setSt(p.ref,'checked-in');return['ok','Valid · '+p.name+' · group of '+p.size+' · slot '+t.slots[p.sj]+' · directed to '+p.lot+'. Entry counted.']};
+ const mkDemo=()=>{const j=D[0].slots.findIndex(s=>s.left>=2);if(j<0)return;const n=passes.length+1;addPass({ref:t.code+'-2410-'+(7000+n),t:tid,di:0,sj:j,name:'Demo Visitor '+n,mobile:'90000'+String(10000+n),size:2,veh:'Car',cat:'General',status:'issued',lot:t.park[0]},tid+'|0|'+j+'|g',2)};
+ const nav=[['home','Visitor portal'],['book','Register'],['ops','Officer dashboard'],['scan','Checkpoint'],['platform','Platform admin']];
+ return html`<div style=${{'--ac':t.ac}}><div class="top"><div class="wrap"><span class="logo">🛕 DarshanPass</span>
+  <select aria-label="Mandir" value=${tid} onChange=${e=>setTid(e.target.value)}>${T.map(x=>html`<option key=${x.id} value=${x.id}>${x.name}</option>`)}</select>
+  <div class="tabs">${nav.map(([k,l])=>html`<button key=${k} class=${view===k?'on':''} onClick=${()=>setView(k)}>${l}</button>`)}</div></div></div>
+ <div class="wrap">${view==='home'&&html`<${Home} t=${t} D=${D} go=${setView}/>`}
+ ${view==='book'&&html`<${Book} key=${tid} t=${t} D=${D} passes=${passes} addPass=${addPass} wait=${wait} addWait=${w=>setWait(a=>[...a,w])} go=${setView}/>`}
+ ${view==='ops'&&html`<${Ops} t=${t} D=${D} upd=${upd} wait=${wait} passes=${passes} rel=${()=>setWait(a=>a.slice(0,Math.max(0,a.length-2)))}/>`}
+ ${view==='scan'&&html`<${Scan} t=${t} passes=${passes} scan=${scan} mkDemo=${mkDemo} offline=${offline} setOffline=${setOffline} sync=${()=>setPasses(a=>a.map(p=>p.status==='queued'?{...p,status:'checked-in'}:p))}/>`}
+ ${view==='platform'&&html`<${Platform} T=${T} setT=${setT} pick=${id=>{setTid(id);setView('home')}}/>`}
+ <div class="foot">Prototype with sample data · OTP 123456 · Kainchi Dham is the live-pilot tenant; other mandirs are demo tenants on the same platform.</div></div></div>`}
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App}/>`);
+</script>
+</body>
+</html>
